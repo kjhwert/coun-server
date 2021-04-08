@@ -29,6 +29,12 @@ export class Talk extends CommonEntity {
   @Column()
   thumbnail: string;
 
+  @Column()
+  imagePage: number;
+
+  @Column()
+  imageOrder: number;
+
   @ApiProperty()
   @IsNumber()
   @Column()
