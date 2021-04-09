@@ -16,12 +16,12 @@ export class Talk extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @ApiProperty()
   @IsString()
-  @Column()
+  @Column({ nullable: true })
   youtubeUrl: string;
 
   @ApiProperty()
@@ -37,7 +37,7 @@ export class Talk extends CommonEntity {
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ default: () => 0 })
   view: number;
 
   @ManyToOne(

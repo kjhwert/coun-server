@@ -1,15 +1,19 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
+import { createTalkDto, updateTalkDto } from '../../DTOs/talk.dto';
 
 @ApiTags('talk')
 @Controller('talk')
@@ -17,20 +21,32 @@ export class TalkController {
   constructor(private readonly talkService: TalkService) {}
 
   @Get()
-  index() {}
+  index(@Query('page') page: number) {
+    return this.talkService.index(page);
+  }
 
   @Get(':talkId')
-  show(@Param('talkId') talkId: number) {}
+  show(@Param('talkId') talkId: number) {
+    return this.talkService.show(talkId);
+  }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAdminGuard)
+  // @ApiBearerAuth()
+  // @UseGuards(JwtAdminGuard)
   @Post()
-  create() {}
+  create(@Body() data: createTalkDto) {
+    return this.talkService.create(data);
+  }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
   @Put(':talkId')
-  update(@Param('talkId') talkId: number) {}
+  update(
+    @Param('talkId') talkId: number,
+    @Request() { user },
+    @Body() data: updateTalkDto,
+  ) {
+    return this.talkService.update(talkId, user.id, data);
+  }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
