@@ -1,23 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
-
-export class updateTalkDto {
-  @ApiProperty()
-  @IsString()
-  title: string;
-
-  @ApiProperty()
-  @IsString()
-  description: string;
-
-  @ApiProperty()
-  @IsString()
-  youtubeUrl: string;
-
-  @ApiProperty()
-  @IsNumber()
-  typeId: number;
-}
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Code } from '../entities/code/code.entity';
 
 export class createTalkDto {
   @ApiProperty()
@@ -33,4 +16,10 @@ export class createTalkDto {
   @IsString()
   @IsOptional()
   youtubeUrl?: string;
+
+  @ApiProperty({ enum: [Code.TALK_GROWTH, Code.TALK_WRITE, Code.TALK_REVIEW] })
+  @IsInt()
+  @Min(Code.TALK_GROWTH)
+  @Max(Code.TALK_WRITE)
+  typeId: 11 | 12 | 13;
 }

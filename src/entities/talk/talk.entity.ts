@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsInt, IsNumber, IsString, Max, Min } from 'class-validator';
 import { Code } from '../code/code.entity';
 
 @Entity()
@@ -44,5 +44,8 @@ export class Talk extends CommonEntity {
     () => Code,
     code => code.id,
   )
+  @IsInt()
+  @Min(11)
+  @Max(13)
   type: Code;
 }

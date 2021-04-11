@@ -13,7 +13,7 @@ import {
 import { TalkService } from './talk.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
-import { createTalkDto, updateTalkDto } from '../../DTOs/talk.dto';
+import { createTalkDto } from '../../DTOs/talk.dto';
 
 @ApiTags('talk')
 @Controller('talk')
@@ -30,11 +30,11 @@ export class TalkController {
     return this.talkService.show(talkId);
   }
 
-  // @ApiBearerAuth()
-  // @UseGuards(JwtAdminGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtAdminGuard)
   @Post()
-  create(@Body() data: createTalkDto) {
-    return this.talkService.create(data);
+  create(@Body() data: createTalkDto, @Request() { user }) {
+    return this.talkService.create(user.id, data);
   }
 
   @ApiBearerAuth()
@@ -43,7 +43,7 @@ export class TalkController {
   update(
     @Param('talkId') talkId: number,
     @Request() { user },
-    @Body() data: updateTalkDto,
+    @Body() data: createTalkDto,
   ) {
     return this.talkService.update(talkId, user.id, data);
   }
@@ -51,5 +51,7 @@ export class TalkController {
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
   @Delete(':talkId')
-  destroy(@Param('talkId') talkid: number) {}
+  destroy(@Param('talkId') talkId: number) {
+    return this.talkService.destroy(talkId);
+  }
 }

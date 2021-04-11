@@ -5,10 +5,9 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {cors :true});
+  const app = await NestFactory.create(AppModule, { cors: true });
   const swagger = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('documents', app, swagger);
-  await app.listen(3000);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -17,5 +16,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  await app.listen(3000);
 }
 bootstrap();
