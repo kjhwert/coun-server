@@ -23,6 +23,7 @@ export class TalkService {
   ) {}
 
   async index(page: number) {
+    const hasNextPage = await this.hasNextPage(page);
     const data = await this.talkRepository
       .createQueryBuilder()
       .where('status = :act', { act: Code.ACT })
@@ -31,7 +32,20 @@ export class TalkService {
       .orderBy('id', 'DESC')
       .getMany();
 
-    return responseOk(data);
+    return responseOk(data, { hasNextPage });
+  }
+
+  async hasNextPage(page: number): Promise<boolean> {
+    //TODO 쿼리를 한번 더 호출하지 않고 아는 법은 없을까?
+    const { length } = await this.talkRepository
+      .createQueryBuilder()
+      .where('status = :act', { act: Code.ACT })
+      .skip(PAGE_SKIP(page + 1))
+      .take(PAGE_TAKE)
+      .orderBy('id', 'DESC')
+      .getMany();
+
+    return length > 0;
   }
 
   async show(talkId: number) {

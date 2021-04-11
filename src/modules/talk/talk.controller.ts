@@ -21,8 +21,8 @@ export class TalkController {
   constructor(private readonly talkService: TalkService) {}
 
   @Get()
-  index(@Query('page') page: number) {
-    return this.talkService.index(page);
+  index(@Query('page') page: string) {
+    return this.talkService.index(+page);
   }
 
   @Get(':talkId')
