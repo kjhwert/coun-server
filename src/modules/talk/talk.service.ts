@@ -10,7 +10,7 @@ import {
   responseOk,
   responseUpdated,
 } from '../response';
-import { createTalkDto } from '../../DTOs/talk.dto';
+import { createTalkDto, indexTalkDto } from '../../DTOs/talk.dto';
 import { Code } from '../../entities/code/code.entity';
 import { CodeService } from '../code/code.service';
 
@@ -22,16 +22,35 @@ export class TalkService {
     private readonly codeService: CodeService,
   ) {}
 
-  async index(page: number) {
+  async index({ page, type }: indexTalkDto) {
+    const hasNextPage = await this.hasNextPage(+page, +type);
     const data = await this.talkRepository
       .createQueryBuilder()
-      .where('status = :act', { act: Code.ACT })
-      .skip(PAGE_SKIP(page))
+      .where('status = :act')
+      .where('typeId = :type')
+      .setParameters({ act: Code.ACT, type: +type })
+      .skip(PAGE_SKIP(+page))
       .take(PAGE_TAKE)
       .orderBy('id', 'DESC')
       .getMany();
 
-    return responseOk(data);
+    return responseOk(data, { hasNextPage });
+  }
+
+  async hasNextPage(page: number, type: number): Promise<boolean> {
+    const { length } = await this.talkRepository
+      .createQueryBuilder()
+      .where('status = :act')
+      .where('typeId = :type')
+      .setParameters({ act: Code.ACT, type })
+      .skip(PAGE_SKIP(page + 1))
+      .take(PAGE_TAKE)
+      .orderBy('id', 'DESC')
+      .getMany();
+
+    if (length > 0) return true;
+
+    return false;
   }
 
   async show(talkId: number) {

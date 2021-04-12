@@ -13,7 +13,7 @@ import {
 import { TalkService } from './talk.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
-import { createTalkDto } from '../../DTOs/talk.dto';
+import { createTalkDto, indexTalkDto } from '../../DTOs/talk.dto';
 
 @ApiTags('talk')
 @Controller('talk')
@@ -21,8 +21,8 @@ export class TalkController {
   constructor(private readonly talkService: TalkService) {}
 
   @Get()
-  index(@Query('page') page: number) {
-    return this.talkService.index(page);
+  index(@Query() data: indexTalkDto) {
+    return this.talkService.index(data);
   }
 
   @Get(':talkId')
