@@ -7,4 +7,5 @@ export const swaggerOptions = new DocumentBuilder()
   .addBearerAuth()
   .addTag('talk', '성장토크')
   .addTag('user', '회원정보')
+  .addTag('interview', '인터뷰')
   .build();
