@@ -10,7 +10,7 @@ import {
   responseOk,
   responseUpdated,
 } from '../response';
-import { createTalkDto } from '../../DTOs/talk.dto';
+import { createTalkDto, indexTalkDto } from '../../DTOs/talk.dto';
 import { Code } from '../../entities/code/code.entity';
 import { CodeService } from '../code/code.service';
 
@@ -22,12 +22,14 @@ export class TalkService {
     private readonly codeService: CodeService,
   ) {}
 
-  async index(page: number) {
-    const hasNextPage = await this.hasNextPage(page);
+  async index({ page, type }: indexTalkDto) {
+    const hasNextPage = await this.hasNextPage(+page, +type);
     const data = await this.talkRepository
       .createQueryBuilder()
-      .where('status = :act', { act: Code.ACT })
-      .skip(PAGE_SKIP(page))
+      .where('status = :act')
+      .where('typeId = :type')
+      .setParameters({ act: Code.ACT, type: +type })
+      .skip(PAGE_SKIP(+page))
       .take(PAGE_TAKE)
       .orderBy('id', 'DESC')
       .getMany();
@@ -35,17 +37,20 @@ export class TalkService {
     return responseOk(data, { hasNextPage });
   }
 
-  async hasNextPage(page: number): Promise<boolean> {
-    //TODO 쿼리를 한번 더 호출하지 않고 아는 법은 없을까?
+  async hasNextPage(page: number, type: number): Promise<boolean> {
     const { length } = await this.talkRepository
       .createQueryBuilder()
-      .where('status = :act', { act: Code.ACT })
+      .where('status = :act')
+      .where('typeId = :type')
+      .setParameters({ act: Code.ACT, type })
       .skip(PAGE_SKIP(page + 1))
       .take(PAGE_TAKE)
       .orderBy('id', 'DESC')
       .getMany();
 
-    return length > 0;
+    if (length > 0) return true;
+
+    return false;
   }
 
   async show(talkId: number) {

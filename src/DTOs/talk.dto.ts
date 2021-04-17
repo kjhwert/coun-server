@@ -2,6 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Code } from '../entities/code/code.entity';
 
+export class indexTalkDto {
+  @ApiProperty()
+  @IsString()
+  page: string;
+
+  @ApiProperty()
+  @IsString()
+  type: string;
+}
+
 export class createTalkDto {
   @ApiProperty()
   @IsString()

@@ -20,7 +20,7 @@ import { FileModule } from './modules/file/file.module';
     TalkModule,
     UserModule,
     AuthModule,
-    CodeModule,
+    CodeModule
   ],
 })
 export class AppModule {}
