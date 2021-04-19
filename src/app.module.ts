@@ -7,6 +7,7 @@ import { TalkModule } from './modules/talk/talk.module';
 import { CodeModule } from './modules/code/code.module';
 import { InterviewModule } from './modules/interview/interview.module';
 import { FileModule } from './modules/file/file.module';
+import { ReserveModule } from './modules/reserve/reserve.module';
 
 @Module({
   imports: [
@@ -15,12 +16,13 @@ import { FileModule } from './modules/file/file.module';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.prod.env',
     }),
+    ReserveModule,
     FileModule,
     InterviewModule,
     TalkModule,
     UserModule,
     AuthModule,
-    CodeModule
+    CodeModule,
   ],
 })
 export class AppModule {}
