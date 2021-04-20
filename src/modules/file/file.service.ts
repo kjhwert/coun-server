@@ -13,6 +13,10 @@ export class FileService {
     private fileRepository: Repository<FileEntity>,
   ) {}
 
+  async show(id: number): Promise<FileEntity> {
+    return await this.fileRepository.findOne(id);
+  }
+
   async create(userId: number, data: createFileDto) {
     try {
       const newFile = await this.fileRepository.create({

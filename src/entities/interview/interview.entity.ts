@@ -21,7 +21,7 @@ export class Interview extends CommonEntity {
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({ default: () => 0 })
   view: number;
 
   @ManyToOne(
