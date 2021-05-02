@@ -16,17 +16,17 @@ export class gallery extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable:true })
   description: string;
 
   @ApiProperty()
   @IsNumber()
-  @Column()
+  @Column({default: () => 0})
   view: number;
 
   @ManyToOne(
     () => FileEntity,
     file => file.id,
   )
-  thumbnail: FileEntity;
+  image: FileEntity;
 }

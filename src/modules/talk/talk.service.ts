@@ -7,12 +7,12 @@ import {
   responseCreated,
   responseDestroyed,
   responseNotAcceptable,
-  responseOk,
   responseUpdated,
 } from '../response';
 import { createTalkDto, indexTalkDto } from '../../DTOs/talk.dto';
 import { Code } from '../../entities/code/code.entity';
 import { CodeService } from '../code/code.service';
+import { Talks } from './talk';
 
 @Injectable()
 export class TalkService {
@@ -22,44 +22,17 @@ export class TalkService {
     private readonly codeService: CodeService,
   ) {}
 
-  async index({ page, type }: indexTalkDto) {
-    const hasNextPage = await this.hasNextPage(+page, +type);
-    const data = await this.talkRepository
-      .createQueryBuilder()
-      .where('status = :act')
-      .where('typeId = :type')
-      .setParameters({ act: Code.ACT, type: +type })
-      .skip(PAGE_SKIP(+page))
-      .take(PAGE_TAKE)
-      .orderBy('id', 'DESC')
-      .getMany();
-
-    return responseOk(data, { hasNextPage });
+  async index({ page, type }: indexTalkDto): Promise<Talks> {
+    const [talks, totalCount] = await this.talkRepository.findAndCount({
+      take: PAGE_TAKE,
+      skip: PAGE_SKIP(page),
+      where: { type, status: Code.ACT },
+      order: { id: 'DESC' },
+    });
+    return { talks, totalCount };
   }
-
-  async hasNextPage(page: number, type: number): Promise<boolean> {
-    const { length } = await this.talkRepository
-      .createQueryBuilder()
-      .where('status = :act')
-      .where('typeId = :type')
-      .setParameters({ act: Code.ACT, type })
-      .skip(PAGE_SKIP(page + 1))
-      .take(PAGE_TAKE)
-      .orderBy('id', 'DESC')
-      .getMany();
-
-    if (length > 0) return true;
-
-    return false;
-  }
-
   async show(talkId: number) {
-    const data = await this.talkRepository
-      .createQueryBuilder()
-      .where('id = :talkId', { talkId })
-      .getOne();
-
-    return responseOk(data);
+    return await this.talkRepository.findOne(talkId);
   }
 
   async create(adminId: number, data: createTalkDto) {
@@ -75,6 +48,7 @@ export class TalkService {
       imageOrder = 0;
     }
 
+    /** unsplash 이미지를 가져온다. */
     const {
       data: { results },
     } = await this.httpService
@@ -92,7 +66,6 @@ export class TalkService {
         thumbnail,
         imageOrder,
         imagePage,
-        createdId: adminId,
         type,
       });
       await this.talkRepository.save(newTalk);
@@ -109,7 +82,7 @@ export class TalkService {
     try {
       await this.talkRepository
         .createQueryBuilder()
-        .update({ ...rest, type, updatedId: adminId })
+        .update({ ...rest, type })
         .where('id = :talkId', { talkId })
         .execute();
 
@@ -133,6 +106,7 @@ export class TalkService {
     }
   }
 
+  /** 성장토크의 모든 썸네일 이미지를 변경하는 코드 */
   async thumbnailUpdate() {
     const talks = await this.talkRepository.createQueryBuilder().getMany();
 

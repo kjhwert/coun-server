@@ -12,5 +12,5 @@ export class createInterviewDto {
 
   @ApiProperty()
   @IsNumber()
-  thumbnailId: number;
+  imageId: number;
 }

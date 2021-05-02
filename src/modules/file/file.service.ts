@@ -21,7 +21,6 @@ export class FileService {
     try {
       const newFile = await this.fileRepository.create({
         ...data,
-        createdId: userId,
       });
       await this.fileRepository.save(newFile);
 

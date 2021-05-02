@@ -8,7 +8,7 @@ export const responseOk = (data = null, paging = null, message = '') => ({
 });
 
 export const responseCreated = (data = {}, message = '등록 되었습니다.') => ({
-  statusCode: HttpStatus.OK,
+  statusCode: HttpStatus.CREATED,
   message: [message],
   data,
 });

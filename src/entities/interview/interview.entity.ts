@@ -16,7 +16,7 @@ export class Interview extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable:true })
   description: string;
 
   @ApiProperty()
@@ -28,5 +28,5 @@ export class Interview extends CommonEntity {
     () => FileEntity,
     file => file.id,
   )
-  thumbnail: FileEntity;
+  image: FileEntity;
 }

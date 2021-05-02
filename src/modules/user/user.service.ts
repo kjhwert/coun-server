@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../entities/user/user.entity';
 import { Repository } from 'typeorm';
@@ -12,6 +12,10 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  async getTeachers () {
+    return await this.userRepository.find({where:{isTeacher:true}, relations: ['image'], order: {id:'ASC'}})
+  }
+
   async create(data: createUserDto) {
     try {
       const newUser = await this.userRepository.create({
@@ -19,10 +23,9 @@ export class UserService {
         isAdmin: true,
       });
       await this.userRepository.save(newUser);
-
-      return responseCreated();
+      return responseCreated()
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      return responseNotAcceptable(e.message)
     }
   }
 

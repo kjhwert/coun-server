@@ -2,14 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Code } from '../entities/code/code.entity';
 
+type TalkType = 11 | 12 | 13;
+
 export class indexTalkDto {
   @ApiProperty()
   @IsString()
   page: string;
 
-  @ApiProperty()
+  @ApiProperty({enum:[11,12,13]})
   @IsString()
-  type: string;
+  type: TalkType;
 }
 
 export class createTalkDto {

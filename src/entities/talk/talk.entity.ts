@@ -45,7 +45,7 @@ export class Talk extends CommonEntity {
     code => code.id,
   )
   @IsInt()
-  @Min(11)
-  @Max(13)
+  @Min(Code.TALK_GROWTH)
+  @Max(Code.TALK_WRITE)
   type: Code;
 }

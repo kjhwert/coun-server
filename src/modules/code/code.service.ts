@@ -11,13 +11,7 @@ export class CodeService {
   ) {}
 
   async index(groupId: number) {
-    const data = await this.codeRepository
-      .createQueryBuilder()
-      .where('groupId = :groupId')
-      .setParameters({ groupId })
-      .getMany();
-
-    return responseOk(data);
+    return await this.codeRepository.find({ where: { group: groupId } });
   }
 
   async show(id: number): Promise<Code> {

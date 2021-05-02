@@ -20,12 +20,12 @@ export class InterviewService {
 
   async show(interviewId: number) {}
 
-  async create(adminId: number, { thumbnailId, ...rest }: createInterviewDto) {
+  async create(adminId: number, { imageId, ...rest }: createInterviewDto) {
     try {
-      const thumbnail = await this.fileService.show(thumbnailId);
+      const image = await this.fileService.show(imageId);
       const newInterview = await this.interviewRepository.create({
         ...rest,
-        thumbnail,
+        image,
       });
       await this.interviewRepository.save(newInterview);
 

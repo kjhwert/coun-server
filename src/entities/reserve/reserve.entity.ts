@@ -21,7 +21,7 @@ export class Reserve extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp'})
   reserveDate: Date;
 
   @ApiProperty()

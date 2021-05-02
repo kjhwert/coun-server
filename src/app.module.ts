@@ -11,10 +11,19 @@ import { ReserveModule } from './modules/reserve/reserve.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.prod.env',
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: ["dist/**/*.entity{.ts,.js}"],
+      synchronize: process.env.NODE_ENV === 'dev',
     }),
     ReserveModule,
     FileModule,

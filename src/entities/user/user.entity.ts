@@ -1,8 +1,9 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { CommonEntity } from '../common.entity';
+import { FileEntity } from '../file.entity';
 
 @Entity()
 export class User extends CommonEntity {
@@ -11,12 +12,12 @@ export class User extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ unique: true, length: 100 })
+  @Column({ unique: true, length: 100, nullable:true, select:false })
   email: string;
 
   @ApiProperty()
   @IsString()
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable:true, select: false })
   password: string;
 
   @ApiProperty()
@@ -25,9 +26,22 @@ export class User extends CommonEntity {
   name: string;
 
   @ApiProperty()
+  @IsString()
+  @Column({type:'text', nullable:true})
+  description: string;
+
+  @ApiProperty()
   @IsBoolean()
-  @Column()
+  @Column({default: () => false, select:false})
   isAdmin: boolean;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Column({default: ()=> false})
+  isTeacher: boolean;
+
+  @ManyToOne(() => FileEntity, file => file.id)
+  image: FileEntity;
 
   private async hashing(password: string) {
     return await bcrypt.hash(password, 10);
