@@ -5,12 +5,14 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
 import { join } from 'path';
+import { NotAcceptableFilter } from './filters/not-acceptable.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   const swagger = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('documents', app, swagger);
 
+  app.useGlobalFilters(new NotAcceptableFilter())
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
