@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Code } from '../../entities/code/code.entity';
 import { Repository } from 'typeorm';
-import { responseOk } from '../response';
 
 @Injectable()
 export class CodeService {

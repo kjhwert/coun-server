@@ -25,10 +25,7 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(apiBodyOptions)
   @Post('interview')
-  createInterviewFile(
-    @UploadedFile() { mimetype, originalname, path, size },
-    @Request() { user },
-  ) {
+  createInterviewFile(@UploadedFile() { mimetype, originalname, path, size }) {
     const data = {
       name: originalname,
       type: mimetype,
@@ -36,7 +33,7 @@ export class FileController {
       size,
     };
 
-    return this.fileService.create(user.id, data);
+    return this.fileService.create(data);
   }
 
   @ApiBearerAuth()
@@ -47,10 +44,7 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(apiBodyOptions)
   @Post('gallery')
-  createGalleryFile(
-    @UploadedFile() { mimetype, originalname, path, size },
-    @Request() { user },
-  ) {
+  createGalleryFile(@UploadedFile() { mimetype, originalname, path, size }) {
     const data = {
       name: originalname,
       type: mimetype,
@@ -58,6 +52,23 @@ export class FileController {
       size,
     };
 
-    return this.fileService.create(user.id, data);
+    return this.fileService.create(data);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAdminGuard)
+  @UseInterceptors(FileInterceptor('file', fileLocalOptions('./public/user')))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody(apiBodyOptions)
+  @Post('user')
+  createUserImage(@UploadedFile() { mimetype, originalname, path, size }) {
+    const data = {
+      name: originalname,
+      type: mimetype,
+      path,
+      size,
+    };
+
+    return this.fileService.create(data);
   }
 }

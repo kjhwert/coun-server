@@ -22,7 +22,7 @@ export class InterviewController {
 
   @Get()
   index(@Query('page') page: string) {
-    return this.interviewService.index(+page);
+    return this.interviewService.index(page);
   }
 
   @Get(':interviewId')

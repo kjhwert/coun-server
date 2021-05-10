@@ -1,4 +1,11 @@
-import { Controller, Post, UseGuards, Request, Body, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Body,
+  Get,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { LoginGuard } from '../auth/guard/login.guard';
@@ -11,8 +18,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('teacher')
-  getTeachers () {
-    return this.userService.getTeachers()
+  getTeachers() {
+    return this.userService.getTeachers();
   }
 
   @UseGuards(LoginGuard)

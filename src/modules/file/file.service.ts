@@ -17,7 +17,7 @@ export class FileService {
     return await this.fileRepository.findOne(id);
   }
 
-  async create(userId: number, data: createFileDto) {
+  async create(data: createFileDto) {
     try {
       const newFile = await this.fileRepository.create({
         ...data,
