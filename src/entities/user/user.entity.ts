@@ -1,4 +1,10 @@
-import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
 import * as bcrypt from 'bcrypt';
@@ -12,12 +18,12 @@ export class User extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({ unique: true, length: 100, nullable:true, select:false })
+  @Column({ unique: true, length: 100, nullable: true, select: false })
   email: string;
 
   @ApiProperty()
   @IsString()
-  @Column({ length: 100, nullable:true, select: false })
+  @Column({ length: 100, nullable: true, select: false })
   password: string;
 
   @ApiProperty()
@@ -27,20 +33,28 @@ export class User extends CommonEntity {
 
   @ApiProperty()
   @IsString()
-  @Column({type:'text', nullable:true})
+  @Column({ length: 50, nullable: true })
+  grade: string;
+
+  @ApiProperty()
+  @IsString()
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @ApiProperty()
   @IsBoolean()
-  @Column({default: () => false, select:false})
+  @Column({ default: () => false, select: false })
   isAdmin: boolean;
 
   @ApiProperty()
   @IsBoolean()
-  @Column({default: ()=> false})
+  @Column({ default: () => false })
   isTeacher: boolean;
 
-  @ManyToOne(() => FileEntity, file => file.id)
+  @ManyToOne(
+    () => FileEntity,
+    file => file.id,
+  )
   image: FileEntity;
 
   private async hashing(password: string) {

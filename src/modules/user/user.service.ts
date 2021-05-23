@@ -12,11 +12,18 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async getTeachers() {
+  async getProfiles() {
     return await this.userRepository.find({
       where: { isTeacher: true },
       relations: ['image'],
       order: { id: 'ASC' },
+    });
+  }
+
+  async getProfile(id: number) {
+    return await this.userRepository.findOne({
+      where: { isTeacher: true, id },
+      relations: ['image'],
     });
   }
 

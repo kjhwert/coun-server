@@ -5,6 +5,7 @@ import {
   Request,
   Body,
   Get,
+  Param,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -17,9 +18,14 @@ import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('teacher')
-  getTeachers() {
-    return this.userService.getTeachers();
+  @Get('profiles')
+  getProfiles() {
+    return this.userService.getProfiles();
+  }
+
+  @Get('profile/:id')
+  getProfile(@Param('id') id: string) {
+    return this.userService.getProfile(+id);
   }
 
   @UseGuards(LoginGuard)
