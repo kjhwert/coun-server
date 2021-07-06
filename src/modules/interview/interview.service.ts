@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Interview } from '../../entities/interview/interview.entity';
 import { Repository } from 'typeorm';
@@ -22,7 +22,7 @@ export class InterviewService {
       totalCount,
     ] = await this.interviewRepository.findAndCount({
       take: PAGE_TAKE,
-      skip: PAGE_SKIP(page),
+      skip: PAGE_SKIP(+page),
       where: { status: Code.ACT },
       order: { id: 'DESC' },
       relations: ['image'],
@@ -31,9 +31,9 @@ export class InterviewService {
     return { interviews, totalCount };
   }
 
-  async hasNextPage(page: number) {}
-
-  async show(interviewId: number) {}
+  async show(id: number): Promise<Interview> {
+    return await this.interviewRepository.findOne(id);
+  }
 
   async create(adminId: number, { imageId, ...rest }: createInterviewDto) {
     try {
@@ -42,11 +42,9 @@ export class InterviewService {
         ...rest,
         image,
       });
-      await this.interviewRepository.save(newInterview);
-
-      return responseCreated();
+      return await this.interviewRepository.save(newInterview);
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 

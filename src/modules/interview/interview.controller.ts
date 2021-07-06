@@ -13,7 +13,8 @@ import {
 import { InterviewService } from './interview.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { createInterviewDto } from '../../DTOs/interview.dto';
-import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
+import { JwtAdminGuard } from '../../auth/guard/jwt-admin.guard';
+import { UserDecorator } from '../../decorators/user.decorator';
 
 @ApiTags('interview')
 @Controller('interview')
@@ -25,33 +26,33 @@ export class InterviewController {
     return this.interviewService.index(page);
   }
 
-  @Get(':interviewId')
-  show(@Param('interviewId') interviewId: number) {
-    return this.interviewService.show(interviewId);
+  @Get(':id')
+  show(@Param('id') id: number) {
+    return this.interviewService.show(id);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
   @Post()
-  create(@Body() data: createInterviewDto, @Request() { user }) {
+  create(@Body() data: createInterviewDto, @UserDecorator() user) {
     return this.interviewService.create(user.id, data);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
-  @Put(':interviewId')
+  @Put(':id')
   update(
     @Body() data: createInterviewDto,
-    @Param('interviewId') interviewId: number,
-    @Request() { user },
+    @Param('id') id: number,
+    @UserDecorator() user,
   ) {
-    return this.interviewService.update(user.id, interviewId, data);
+    return this.interviewService.update(user.id, id, data);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
-  @Delete(':interviewId')
-  destroy(@Param('interviewId') interviewId: number, @Request() { user }) {
-    return this.interviewService.destroy(user.id, interviewId);
+  @Delete(':id')
+  destroy(@Param('id') id: number, @UserDecorator() user) {
+    return this.interviewService.destroy(user.id, id);
   }
 }
