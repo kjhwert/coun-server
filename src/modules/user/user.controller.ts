@@ -9,29 +9,30 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { LoginGuard } from '../auth/guard/login.guard';
+import { LoginGuard } from '../../auth/guard/login.guard';
 import { createUserDto, loginUserDto } from '../../DTOs/user.dto';
-import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
+import { JwtAdminGuard } from '../../auth/guard/jwt-admin.guard';
+import { User } from '../../decorators/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('profiles')
-  getProfiles() {
-    return this.userService.getProfiles();
+  @Get()
+  index() {
+    return this.userService.index();
   }
 
-  @Get('profile/:id')
-  getProfile(@Param('id') id: string) {
-    return this.userService.getProfile(+id);
+  @Get(':id')
+  show(@Param('id') id: string) {
+    return this.userService.show(+id);
   }
 
   @UseGuards(LoginGuard)
   @Post('login')
-  login(@Request() { user }, @Body() data: loginUserDto) {
-    return user;
+  login(@User() user, @Body() data: loginUserDto) {
+    return this.userService.login(user);
   }
 
   @ApiBearerAuth()
