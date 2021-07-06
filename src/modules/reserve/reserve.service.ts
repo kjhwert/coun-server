@@ -13,11 +13,11 @@ export class ReserveService {
   ) {}
 
   async index(): Promise<Reserve[]> {
-    return this.reserveRepository.find({ where: { status: true } });
+    return await this.reserveRepository.find({ where: { status: true } });
   }
 
   async show(id: number): Promise<Reserve> {
-    return this.reserveRepository.findOne(id);
+    return await this.reserveRepository.findOne(id);
   }
 
   async create({ fieldId, placeId, ...rest }: createReserveDto) {
