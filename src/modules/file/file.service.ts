@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileEntity } from '../../entities/file.entity';
 import { Repository } from 'typeorm';
@@ -17,17 +17,15 @@ export class FileService {
     return await this.fileRepository.findOne(id);
   }
 
-  async create(data: createFileDto) {
+  async create(data: createFileDto): Promise<FileEntity> {
     try {
       const newFile = await this.fileRepository.create({
         ...data,
       });
-      await this.fileRepository.save(newFile);
-
-      return responseOk(newFile, {}, '업로드 되었습니다.');
+      return await this.fileRepository.save(newFile);
     } catch (e) {
       fs.unlinkSync(data.path);
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 }

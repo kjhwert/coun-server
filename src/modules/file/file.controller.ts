@@ -1,6 +1,5 @@
 import {
   Controller,
-  Request,
   Post,
   UploadedFile,
   UseGuards,
@@ -8,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { JwtAdminGuard } from '../auth/guard/jwt-admin.guard';
+import { JwtAdminGuard } from '../../auth/guard/jwt-admin.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { apiBodyOptions, fileLocalOptions } from '../file-upload.utils';
 
