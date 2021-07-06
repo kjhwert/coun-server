@@ -1,18 +1,12 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from '../../entities/talk/talk.entity';
 import { Repository } from 'typeorm';
 import { PAGE_SKIP, PAGE_TAKE } from '../common';
-import {
-  responseCreated,
-  responseDestroyed,
-  responseNotAcceptable,
-  responseUpdated,
-} from '../response';
 import { createTalkDto, indexTalkDto } from '../../DTOs/talk.dto';
 import { Code } from '../../entities/code/code.entity';
 import { CodeService } from '../code/code.service';
-import { Talks } from './talk';
+import { Talks } from '../../interfaces/talk';
 
 @Injectable()
 export class TalkService {
@@ -25,17 +19,17 @@ export class TalkService {
   async index({ page, type }: indexTalkDto): Promise<Talks> {
     const [talks, totalCount] = await this.talkRepository.findAndCount({
       take: PAGE_TAKE,
-      skip: PAGE_SKIP(page),
+      skip: PAGE_SKIP(+page),
       where: { type, status: Code.ACT },
       order: { id: 'DESC' },
     });
     return { talks, totalCount };
   }
-  async show(talkId: number) {
-    return await this.talkRepository.findOne(talkId);
+  async show(id: number): Promise<Talk> {
+    return await this.talkRepository.findOne(id);
   }
 
-  async create(adminId: number, data: createTalkDto) {
+  async create(adminId: number, data: createTalkDto): Promise<Talk> {
     const { imagePage: page, imageOrder: order } = await this.talkRepository
       .createQueryBuilder()
       .orderBy('id', 'DESC')
@@ -68,11 +62,9 @@ export class TalkService {
         imagePage,
         type,
       });
-      await this.talkRepository.save(newTalk);
-
-      return responseCreated();
+      return await this.talkRepository.save(newTalk);
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 
@@ -80,29 +72,25 @@ export class TalkService {
     const { typeId, ...rest } = data;
     const type = await this.codeService.show(typeId);
     try {
-      await this.talkRepository
+      return await this.talkRepository
         .createQueryBuilder()
         .update({ ...rest, type })
         .where('id = :talkId', { talkId })
         .execute();
-
-      return responseUpdated();
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 
   async destroy(talkId: number) {
     try {
-      await this.talkRepository
+      return await this.talkRepository
         .createQueryBuilder()
-        .update({ status: Code.DELETE })
+        .update({ status: false })
         .where('id = :talkId', { talkId })
         .execute();
-
-      return responseDestroyed();
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 
