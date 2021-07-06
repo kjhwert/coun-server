@@ -4,7 +4,6 @@ import { FileEntity } from '../../entities/file.entity';
 import { Repository } from 'typeorm';
 import { createFileDto } from '../../DTOs/file.dto';
 import * as fs from 'fs';
-import { responseNotAcceptable, responseOk } from '../response';
 
 @Injectable()
 export class FileService {

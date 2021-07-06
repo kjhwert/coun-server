@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Interview } from '../../entities/interview/interview.entity';
 import { Repository } from 'typeorm';
 import { createInterviewDto } from '../../DTOs/interview.dto';
-import { responseCreated, responseNotAcceptable } from '../response';
 import { FileService } from '../file/file.service';
 import { PAGE_SKIP, PAGE_TAKE } from '../common';
 import { Code } from '../../entities/code/code.entity';

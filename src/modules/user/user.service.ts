@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   NotAcceptableException,
   UnauthorizedException,
@@ -10,7 +9,6 @@ import { User } from '../../entities/user/user.entity';
 import { Repository } from 'typeorm';
 import { Code } from '../../entities/code/code.entity';
 import { createUserDto } from '../../DTOs/user.dto';
-import { responseCreated, responseNotAcceptable } from '../response';
 import { AuthService } from '../../auth/auth.service';
 import { LoginPayload } from '../../auth/payload/login.payload';
 
