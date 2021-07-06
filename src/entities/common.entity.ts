@@ -1,8 +1,8 @@
 import { Column } from 'typeorm';
 
 export class CommonEntity {
-  @Column({ default: 1, select: false })
-  status: number;
+  @Column({ type: 'boolean', default: true, select: false })
+  status: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
