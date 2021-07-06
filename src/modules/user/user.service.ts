@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   Injectable,
   NotAcceptableException,
@@ -61,16 +62,15 @@ export class UserService {
     return this.authService.login(users);
   }
 
-  async create(data: createUserDto) {
+  async create(data: createUserDto): Promise<User> {
     try {
       const newUser = await this.userRepository.create({
         ...data,
         isAdmin: true,
       });
-      await this.userRepository.save(newUser);
-      return responseCreated();
+      return await this.userRepository.save(newUser);
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 
