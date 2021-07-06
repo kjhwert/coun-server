@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reserve } from '../../entities/reserve/reserve.entity';
 import { Repository } from 'typeorm';
 import { createReserveDto } from '../../DTOs/reserve.dto';
 import { CodeService } from '../code/code.service';
-import { responseCreated, responseNotAcceptable } from '../response';
 
 @Injectable()
 export class ReserveService {
@@ -12,6 +11,14 @@ export class ReserveService {
     @InjectRepository(Reserve) private reserveRepository: Repository<Reserve>,
     private readonly codeService: CodeService,
   ) {}
+
+  async index(): Promise<Reserve[]> {
+    return this.reserveRepository.find({ where: { status: true } });
+  }
+
+  async show(id: number): Promise<Reserve> {
+    return this.reserveRepository.findOne(id);
+  }
 
   async create({ fieldId, placeId, ...rest }: createReserveDto) {
     try {
@@ -22,11 +29,10 @@ export class ReserveService {
         field,
         place,
       });
-      await this.reserveRepository.save(newReserve);
 
-      return responseCreated();
+      return await this.reserveRepository.save(newReserve);
     } catch (e) {
-      return responseNotAcceptable(e.message);
+      throw new BadRequestException(e.message);
     }
   }
 }
