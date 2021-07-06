@@ -68,26 +68,26 @@ export class TalkService {
     }
   }
 
-  async update(talkId: number, adminId: number, data: createTalkDto) {
+  async update(id: number, adminId: number, data: createTalkDto) {
     const { typeId, ...rest } = data;
     const type = await this.codeService.show(typeId);
     try {
       return await this.talkRepository
         .createQueryBuilder()
         .update({ ...rest, type })
-        .where('id = :talkId', { talkId })
+        .where('id = :id', { id })
         .execute();
     } catch (e) {
       throw new BadRequestException(e.message);
     }
   }
 
-  async destroy(talkId: number) {
+  async destroy(id: number) {
     try {
       return await this.talkRepository
         .createQueryBuilder()
         .update({ status: false })
-        .where('id = :talkId', { talkId })
+        .where('id = :id', { id })
         .execute();
     } catch (e) {
       throw new BadRequestException(e.message);

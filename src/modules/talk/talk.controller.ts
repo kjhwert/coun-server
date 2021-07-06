@@ -42,19 +42,19 @@ export class TalkController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
-  @Put(':talkId')
+  @Put(':id')
   update(
-    @Param('talkId') talkId: number,
+    @Param('id') id: number,
     @Request() { user },
     @Body() data: createTalkDto,
   ) {
-    return this.talkService.update(talkId, user.id, data);
+    return this.talkService.update(id, user.id, data);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAdminGuard)
-  @Delete(':talkId')
-  destroy(@Param('talkId') talkId: number) {
-    return this.talkService.destroy(talkId);
+  @Delete(':id')
+  destroy(@Param('id') id: number) {
+    return this.talkService.destroy(id);
   }
 }
