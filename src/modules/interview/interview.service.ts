@@ -31,7 +31,7 @@ export class InterviewService {
   }
 
   async show(id: number): Promise<Interview> {
-    return await this.interviewRepository.findOne(id);
+    return await this.interviewRepository.findOne(id, { relations: ['image'] });
   }
 
   async create(adminId: number, { imageId, ...rest }: createInterviewDto) {
